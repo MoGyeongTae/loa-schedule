@@ -8,6 +8,16 @@ type AddScheduleFormProps = {
   date: string;
 };
 
+const WEEKDAYS = [
+  { value: 1, label: "월" },
+  { value: 2, label: "화" },
+  { value: 3, label: "수" },
+  { value: 4, label: "목" },
+  { value: 5, label: "금" },
+  { value: 6, label: "토" },
+  { value: 0, label: "일" },
+];
+
 const COLORS = [
   { id: "blue", bg: "#84b6f4", label: "파랑" },
   { id: "yellow", bg: "#f8de7e", label: "노랑" },
@@ -28,8 +38,19 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
   const [startTime, setStartTime] = useState("09:00");
   const [endTime, setEndTime] = useState("18:00");
   const [repeat, setRepeat] = useState("none");
+  const [weekdays, setWeekdays] = useState<number[]>(() => [
+    dayjs(initialDate).day(),
+  ]);
   const [color, setColor] = useState(COLORS[0].bg);
   const [memo, setMemo] = useState("");
+
+  const toggleWeekday = (day: number) => {
+    setWeekdays((current) =>
+      current.includes(day)
+        ? current.filter((value) => value !== day)
+        : [...current, day],
+    );
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -115,9 +136,38 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
           >
             <option value="none">반복 없음</option>
             <option value="weekly">매주 같은 요일</option>
-            <option value="cycle">며칠씩 순환</option>
+            {/* <option value="cycle">며칠씩 순환</option> */}
           </select>
         </label>
+
+        {repeat === "weekly" && (
+          <fieldset>
+            <legend className="mb-1.5 block text-sm font-medium text-zinc-700">
+              요일
+            </legend>
+            <div className="flex flex-wrap gap-2">
+              {WEEKDAYS.map((weekday) => {
+                const selected = weekdays.includes(weekday.value);
+
+                return (
+                  <button
+                    key={weekday.value}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => toggleWeekday(weekday.value)}
+                    className={`h-9 w-9 rounded-full text-sm font-medium cursor-pointer ${
+                      selected
+                        ? "bg-zinc-900 text-white"
+                        : "bg-zinc-100 text-zinc-500"
+                    }`}
+                  >
+                    {weekday.label}
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+        )}
 
         <fieldset>
           <legend className="mb-1.5 block text-sm font-medium text-zinc-700">
@@ -144,13 +194,13 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
         <button
           type="button"
           onClick={() => router.push(`/${initialDate}/schedule`)}
-          className="rounded-lg px-4 py-2 text-sm text-zinc-600 hover:bg-zinc-100"
+          className="rounded-lg px-4 py-2 text-sm text-zinc-600 hover:bg-zinc-100 cursor-pointer"
         >
           취소
         </button>
         <button
           type="submit"
-          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
+          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 cursor-pointer"
         >
           추가
         </button>
