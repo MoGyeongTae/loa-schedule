@@ -2,32 +2,32 @@ const NOTES = [
   {
     id: "weekend-shift",
     date: "8/22",
-    title: "주말 근무",
-    body: "주말 근무 인원 확인. 교대 요청 있으면 금요일까지 받기.",
+    title: "로스트아크",
+    body: "TTTTT",
     color: "bg-[#fef08a]",
     rotate: "-rotate-2",
   },
   {
     id: "part-time",
     date: "8/24",
-    title: "알바 특이사항",
-    body: "모경태 알바 월·수·금. 이번 주 수요일은 30분 일찍 퇴근.",
+    title: "네버",
+    body: "Test",
     color: "bg-[#fda4af]",
     rotate: "rotate-1",
   },
   {
     id: "day-off",
     date: "8/25",
-    title: "연차",
-    body: "연차 대체 인력 필요. 오픈 담당 미리 지정할 것.",
+    title: "다이",
+    body: "ㄴㄴ",
     color: "bg-[#86efac]",
     rotate: "-rotate-1",
   },
   {
     id: "meeting",
     date: "8/26",
-    title: "주간 미팅",
-    body: "10:00 주간 미팅. 다음 달 근무표 초안 가져오기.",
+    title: "ㅇㅇ",
+    body: "테스트",
     color: "bg-[#93c5fd]",
     rotate: "rotate-2",
   },
@@ -57,7 +57,9 @@ const MonthlyMemo = () => {
                   aria-hidden
                   className="absolute left-1/2 top-0 h-3 w-14 -translate-x-1/2 -translate-y-1/2 rounded-sm bg-amber-200/80 shadow-sm"
                 />
-                <p className="text-[11px] font-medium text-zinc-500">{note.date}</p>
+                <p className="text-[11px] font-medium text-zinc-500">
+                  {note.date}
+                </p>
                 <h3 className="mt-1 text-sm font-semibold text-zinc-800">
                   {note.title}
                 </h3>
