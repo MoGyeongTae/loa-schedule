@@ -9,13 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@fullcalendar/react": "^7.0.2",
     "dayjs": "^1.11.23",
     "next": "16.3.2",
     "react": "19.2.8",
     "react-big-calendar": "^1.20.0",
-    "react-dom": "19.2.8",
-    "temporal-polyfill": "^1.0.4"
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

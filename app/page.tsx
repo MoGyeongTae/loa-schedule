@@ -1,7 +1,5 @@
-import Calendar from "@/components/Calendar/LegacyCalendar";
 import TestCalendar from "@/components/Calendar/ScheduleCalendar";
 import MonthlyMemo from "@/components/MonthlyMemo/MonthlyMemo";
-import Test from "@/components/Test";
 
 export default function Home() {
   return (
