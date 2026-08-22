@@ -1,0 +1,6 @@
+/* v7 daygrid는 top 계산 전에 이벤트를 visibility:hidden으로 둔다.
+   두 번째 패스가 안 오면 이벤트가 DOM에는 있어도 안 보인다. */
+.loa-schedule-calendar [style*="visibility: hidden"],
+.loa-schedule-calendar [style*="visibility:hidden"] {
+  visibility: visible !important;
+}
