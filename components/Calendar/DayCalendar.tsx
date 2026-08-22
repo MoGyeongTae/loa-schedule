@@ -6,6 +6,8 @@ import type { Event as RBCEvent } from "react-big-calendar";
 import dayjs, { type Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { expandWeeklyDays } from "@/util/Calendar/Events/expandWeeklyDays";
+import { expandCycleDays } from "@/util/Calendar/Events/expandCycleDays";
 
 dayjs.locale("ko");
 
@@ -25,86 +27,6 @@ type EventColors = {
   bgColor: string;
   textColor: string;
 };
-
-function expandWeeklyDays(
-  title: string,
-  weekdays: number[],
-  range: DateRange,
-  colors: EventColors,
-): CalendarEvent[] {
-  const events: CalendarEvent[] = [];
-
-  for (
-    let day = range.start.startOf("day");
-    day.isBefore(range.end, "day") || day.isSame(range.end, "day");
-    day = day.add(1, "day")
-  ) {
-    if (!weekdays.includes(day.day())) continue;
-
-    events.push({
-      title,
-      start: day.toDate(),
-      end: day.add(1, "day").toDate(),
-      allDay: true,
-      ...colors,
-    });
-  }
-
-  return events;
-}
-
-type CycleSlot = EventColors & {
-  title: string;
-  days: number;
-};
-
-function expandCycleBlocks(
-  cycleStart: Dayjs,
-  slots: CycleSlot[],
-  range: DateRange,
-): CalendarEvent[] {
-  const cycleLength = slots.reduce((sum, slot) => sum + slot.days, 0);
-  if (cycleLength <= 0) return [];
-
-  const rangeStart = range.start.startOf("day");
-  const rangeEnd = range.end.startOf("day");
-  const origin = cycleStart.startOf("day");
-
-  let cursor = origin;
-  if (rangeStart.isAfter(origin, "day")) {
-    const offset = rangeStart.diff(origin, "day");
-    cursor = origin.add(Math.floor(offset / cycleLength) * cycleLength, "day");
-  }
-
-  const events: CalendarEvent[] = [];
-
-  while (cursor.isBefore(rangeEnd, "day") || cursor.isSame(rangeEnd, "day")) {
-    for (const slot of slots) {
-      const slotStart = cursor;
-      const slotEnd = cursor.add(slot.days, "day");
-
-      if (
-        slotEnd.isAfter(rangeStart, "day") &&
-        slotStart.isBefore(rangeEnd.add(1, "day"), "day")
-      ) {
-        events.push({
-          title: slot.title,
-          start: slotStart.toDate(),
-          end: slotEnd.toDate(),
-          allDay: true,
-          bgColor: slot.bgColor,
-          textColor: slot.textColor,
-        });
-      }
-
-      cursor = slotEnd;
-    }
-
-    if (cursor.isAfter(rangeEnd, "day")) break;
-  }
-
-  return events;
-}
 
 type DayCalendarProps = {
   date: string;
@@ -126,11 +48,26 @@ const DayCalendar = ({ date }: DayCalendarProps) => {
 
   const events = useMemo(
     () => [
-      ...expandWeeklyDays("경태 - 알바", [1, 3, 5], range, {
-        bgColor: "#84b6f4",
-        textColor: "#ffffff",
-      }),
-      ...expandCycleBlocks(
+      ...expandWeeklyDays(
+        "경태 - 알바",
+        [1, 3, 5],
+        range,
+        {
+          bgColor: "#84b6f4",
+          textColor: "#ffffff",
+        },
+        {
+          startHour: 10,
+          startMinute: 0,
+          endHour: 20,
+          endMinute: 0,
+        },
+      ),
+      // ...expandMonthlyNthWeekday("팀 정기회의", 2, 2, range, {
+      //   bgColor: "#ea580c",
+      //   textColor: "#ffffff",
+      // }),
+      ...expandCycleDays(
         dayjs("2026-08-03"),
         [
           {
@@ -154,6 +91,7 @@ const DayCalendar = ({ date }: DayCalendarProps) => {
         ],
         range,
       ),
+      // ...ONE_OFF_EVENTS,
     ],
     [range],
   );
@@ -179,6 +117,7 @@ const DayCalendar = ({ date }: DayCalendarProps) => {
             border: "none",
           },
         })}
+        // onSelectEvent={() => {}}
       />
     </div>
   );
