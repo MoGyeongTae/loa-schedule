@@ -1,11 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import type { Event as RBCEvent } from "react-big-calendar";
 import dayjs, { type Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { expandWeeklyDays } from "@/util/Calendar/Events/expandWeeklyDays";
+import { expandCycleDays } from "@/util/Calendar/Events/expandCycleDays";
 
 dayjs.locale("ko");
 
@@ -38,53 +41,6 @@ function getRangeBounds(range: Date[] | { start: Date; end: Date }): DateRange {
     start: dayjs(range.start).startOf("day"),
     end: dayjs(range.end).endOf("day"),
   };
-}
-
-function expandWeeklyDays(
-  title: string,
-  weekdays: number[],
-  range: DateRange,
-  colors: EventColors,
-  times?: {
-    startHour: number;
-    startMinute: number;
-    endHour: number;
-    endMinute: number;
-  },
-): TestEvent[] {
-  const events: TestEvent[] = [];
-
-  for (
-    let day = range.start.startOf("day");
-    day.isBefore(range.end, "day") || day.isSame(range.end, "day");
-    day = day.add(1, "day")
-  ) {
-    if (!weekdays.includes(day.day())) continue;
-
-    if (times) {
-      events.push({
-        title,
-        start: day
-          .hour(times.startHour)
-          .minute(times.startMinute)
-          .second(0)
-          .toDate(),
-        end: day.hour(times.endHour).minute(times.endMinute).second(0).toDate(),
-        ...colors,
-      });
-      continue;
-    }
-
-    events.push({
-      title,
-      start: day.toDate(),
-      end: day.add(1, "day").toDate(),
-      allDay: true,
-      ...colors,
-    });
-  }
-
-  return events;
 }
 
 function nthWeekdayOfMonth(month: Dayjs, weekday: number, nth: number) {
@@ -122,59 +78,6 @@ function expandMonthlyNthWeekday(
     }
 
     cursor = cursor.add(1, "month");
-  }
-
-  return events;
-}
-
-type CycleSlot = EventColors & {
-  title: string;
-  days: number;
-};
-
-function expandCycleBlocks(
-  cycleStart: Dayjs,
-  slots: CycleSlot[],
-  range: DateRange,
-): TestEvent[] {
-  const cycleLength = slots.reduce((sum, slot) => sum + slot.days, 0);
-  if (cycleLength <= 0) return [];
-
-  const rangeStart = range.start.startOf("day");
-  const rangeEnd = range.end.startOf("day");
-  const origin = cycleStart.startOf("day");
-
-  let cursor = origin;
-  if (rangeStart.isAfter(origin, "day")) {
-    const offset = rangeStart.diff(origin, "day");
-    cursor = origin.add(Math.floor(offset / cycleLength) * cycleLength, "day");
-  }
-
-  const events: TestEvent[] = [];
-
-  while (cursor.isBefore(rangeEnd, "day") || cursor.isSame(rangeEnd, "day")) {
-    for (const slot of slots) {
-      const slotStart = cursor;
-      const slotEnd = cursor.add(slot.days, "day");
-
-      if (
-        slotEnd.isAfter(rangeStart, "day") &&
-        slotStart.isBefore(rangeEnd.add(1, "day"), "day")
-      ) {
-        events.push({
-          title: slot.title,
-          start: slotStart.toDate(),
-          end: slotEnd.toDate(),
-          allDay: true,
-          bgColor: slot.bgColor,
-          textColor: slot.textColor,
-        });
-      }
-
-      cursor = slotEnd;
-    }
-
-    if (cursor.isAfter(rangeEnd, "day")) break;
   }
 
   return events;
@@ -221,10 +124,13 @@ const messages = {
   showMore: (total: number) => `+${total}개 더보기`,
 };
 
+function toSchedulePath(date: Date) {
+  return `/${dayjs(date).format("YYYY-MM-DD")}/schedule`;
+}
+
 const ScheduleCalendar = () => {
-  const [currentDate, setCurrentDate] = useState(() =>
-    dayjs("2026-08-01").toDate(),
-  );
+  const router = useRouter();
+  const [currentDate, setCurrentDate] = useState(() => dayjs().toDate());
   const [range, setRange] = useState<DateRange>({
     start: dayjs("2026-08-01").startOf("day"),
     end: dayjs("2026-08-31").endOf("day"),
@@ -232,40 +138,44 @@ const ScheduleCalendar = () => {
 
   const events = useMemo(
     () => [
-      ...expandWeeklyDays("경태 - 알바", [1, 3, 5], range, {
-        bgColor: "#5dc1b9",
-        textColor: "#ffffff",
-      }),
-      // ...expandWeeklyDays(
-      //   "주간 미팅",
-      //   [3],
-      //   range,
-      //   { bgColor: "#7c3aed", textColor: "#ffffff" },
-      //   { startHour: 10, startMinute: 0, endHour: 11, endMinute: 30 },
-      // ),
+      ...expandWeeklyDays(
+        "경태 - 알바",
+        [1, 3, 5],
+        range,
+        {
+          bgColor: "#84b6f4",
+          textColor: "#ffffff",
+        },
+        {
+          startHour: 10,
+          startMinute: 0,
+          endHour: 20,
+          endMinute: 0,
+        },
+      ),
       // ...expandMonthlyNthWeekday("팀 정기회의", 2, 2, range, {
       //   bgColor: "#ea580c",
       //   textColor: "#ffffff",
       // }),
-      ...expandCycleBlocks(
+      ...expandCycleDays(
         dayjs("2026-08-03"),
         [
           {
             title: "용중 - 주간",
             days: 2,
-            bgColor: "#0f766e",
+            bgColor: "#f8de7e",
             textColor: "#ffffff",
           },
           {
             title: "용중 - 야간",
             days: 2,
-            bgColor: "#c2410c",
+            bgColor: "#1c4c96",
             textColor: "#ffffff",
           },
           {
             title: "용중 - 비번",
             days: 2,
-            bgColor: "#6d28d9",
+            bgColor: "#03bb85",
             textColor: "#ffffff",
           },
         ],
@@ -287,7 +197,17 @@ const ScheduleCalendar = () => {
           date={currentDate}
           onNavigate={setCurrentDate}
           onRangeChange={(nextRange) => setRange(getRangeBounds(nextRange))}
-          defaultView="month"
+          selectable
+          onSelectSlot={({ start }) => {
+            router.push(toSchedulePath(start));
+          }}
+          onSelectEvent={(event) => {
+            if (event.start) router.push(toSchedulePath(event.start));
+          }}
+          onDrillDown={(date) => {
+            router.push(toSchedulePath(date));
+          }}
+          defaultView="week"
           culture="ko"
           messages={messages}
           style={{ height: 720 }}
