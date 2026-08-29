@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
+import { PEOPLE, type Person } from "@/types/Calendar/Person";
 
 type AddScheduleFormProps = {
   date: string;
@@ -32,6 +33,7 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
     ? dayjs(date).format("YYYY-MM-DD")
     : dayjs().format("YYYY-MM-DD");
 
+  const [person, setPerson] = useState<Person>(PEOPLE[0]);
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState(initialDate);
   const [allDay, setAllDay] = useState(true);
@@ -42,7 +44,6 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
     dayjs(initialDate).day(),
   ]);
   const [color, setColor] = useState(COLORS[0].bg);
-  const [memo, setMemo] = useState("");
 
   const toggleWeekday = (day: number) => {
     setWeekdays((current) =>
@@ -63,6 +64,33 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
       className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm"
     >
       <div className="grid gap-5">
+        <fieldset>
+          <legend className="mb-1.5 block text-sm font-medium text-zinc-700">
+            일정 주체
+          </legend>
+          <div className="flex flex-wrap gap-2">
+            {PEOPLE.map((name) => {
+              const selected = person === name;
+
+              return (
+                <button
+                  key={name}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() => setPerson(name)}
+                  className={`h-9 rounded-full px-3.5 text-sm font-medium cursor-pointer ${
+                    selected
+                      ? "bg-zinc-900 text-white"
+                      : "bg-zinc-100 text-zinc-500"
+                  }`}
+                >
+                  {name}
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
+
         <label className="block">
           <span className="mb-1.5 block text-sm font-medium text-zinc-700">
             일정 이름
@@ -71,7 +99,7 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
             required
             value={title}
             onChange={(event) => setTitle(event.target.value)}
-            placeholder="예: 경태 - 알바"
+            placeholder="예: 알바"
             className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-zinc-400"
           />
         </label>
@@ -85,7 +113,14 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
             required
             value={startDate}
             onChange={(event) => setStartDate(event.target.value)}
-            className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-zinc-400"
+            onClick={(event) => {
+              try {
+                event.currentTarget.showPicker();
+              } catch {
+                // Native icon already opened the picker, or showPicker is unsupported.
+              }
+            }}
+            className="w-full cursor-pointer rounded-lg border border-zinc-200 px-3 py-2 text-sm outline-none focus:border-zinc-400"
           />
         </label>
 

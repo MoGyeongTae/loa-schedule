@@ -2,21 +2,16 @@
 
 import { useMemo } from "react";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
-import type { Event as RBCEvent } from "react-big-calendar";
 import dayjs, { type Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { expandWeeklyDays } from "@/util/Calendar/Events/expandWeeklyDays";
 import { expandCycleDays } from "@/util/Calendar/Events/expandCycleDays";
+import type { CalendarEvent } from "@/types/Calendar/CalendarEvent";
 
 dayjs.locale("ko");
 
 const localizer = dayjsLocalizer(dayjs);
-
-type CalendarEvent = RBCEvent & {
-  bgColor: string;
-  textColor: string;
-};
 
 type DateRange = {
   start: Dayjs;
@@ -50,6 +45,7 @@ const DayCalendar = ({ date }: DayCalendarProps) => {
     () => [
       ...expandWeeklyDays(
         "경태 - 알바",
+        "경태",
         [1, 3, 5],
         range,
         {
@@ -72,18 +68,21 @@ const DayCalendar = ({ date }: DayCalendarProps) => {
         [
           {
             title: "용중 - 주간",
+            person: "용중",
             days: 2,
             bgColor: "#f8de7e",
             textColor: "#ffffff",
           },
           {
             title: "용중 - 야간",
+            person: "용중",
             days: 2,
             bgColor: "#1c4c96",
             textColor: "#ffffff",
           },
           {
             title: "용중 - 비번",
+            person: "용중",
             days: 2,
             bgColor: "#03bb85",
             textColor: "#ffffff",

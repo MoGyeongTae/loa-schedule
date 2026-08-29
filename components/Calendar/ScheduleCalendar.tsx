@@ -3,22 +3,20 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
-import type { Event as RBCEvent } from "react-big-calendar";
 import dayjs, { type Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { expandWeeklyDays } from "@/util/Calendar/Events/expandWeeklyDays";
 import { expandCycleDays } from "@/util/Calendar/Events/expandCycleDays";
 import { findOverlapDays } from "@/util/Calendar/Events/findOverlapDays";
+import type { CalendarEvent } from "@/types/Calendar/CalendarEvent";
+import type { Person } from "@/types/Calendar/Person";
 
 dayjs.locale("ko");
 
 const localizer = dayjsLocalizer(dayjs);
 
-type TestEvent = RBCEvent & {
-  bgColor: string;
-  textColor: string;
-};
+type TestEvent = CalendarEvent;
 
 type DateRange = {
   start: Dayjs;
@@ -52,6 +50,7 @@ function nthWeekdayOfMonth(month: Dayjs, weekday: number, nth: number) {
 
 function expandMonthlyNthWeekday(
   title: string,
+  person: Person,
   weekday: number,
   nth: number,
   range: DateRange,
@@ -71,6 +70,7 @@ function expandMonthlyNthWeekday(
     ) {
       events.push({
         title,
+        person,
         start: date.toDate(),
         end: date.add(1, "day").toDate(),
         allDay: true,
@@ -87,6 +87,7 @@ function expandMonthlyNthWeekday(
 const ONE_OFF_EVENTS: TestEvent[] = [
   {
     title: "연차",
+    person: "경태",
     start: dayjs("2026-08-25").toDate(),
     end: dayjs("2026-08-26").toDate(),
     allDay: true,
@@ -95,6 +96,7 @@ const ONE_OFF_EVENTS: TestEvent[] = [
   },
   {
     title: "주말 근무",
+    person: "용중",
     start: dayjs("2026-08-22").toDate(),
     end: dayjs("2026-08-23").toDate(),
     allDay: true,
@@ -103,6 +105,7 @@ const ONE_OFF_EVENTS: TestEvent[] = [
   },
   {
     title: "야간 점검",
+    person: "용중",
     start: dayjs("2026-08-27").hour(20).minute(0).toDate(),
     end: dayjs("2026-08-27").hour(22).minute(0).toDate(),
     bgColor: "#059669",
@@ -141,6 +144,7 @@ const ScheduleCalendar = () => {
     () => [
       ...expandWeeklyDays(
         "경태 - 알바",
+        "경태",
         [1, 3, 5],
         range,
         {
@@ -163,18 +167,21 @@ const ScheduleCalendar = () => {
         [
           {
             title: "용중 - 주간",
+            person: "용중",
             days: 2,
             bgColor: "#f8de7e",
             textColor: "#ffffff",
           },
           {
             title: "용중 - 야간",
+            person: "용중",
             days: 2,
             bgColor: "#1c4c96",
             textColor: "#ffffff",
           },
           {
             title: "용중 - 비번",
+            person: "용중",
             days: 2,
             bgColor: "#03bb85",
             textColor: "#ffffff",

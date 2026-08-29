@@ -1,10 +1,12 @@
 import { CalendarEvent } from "@/types/Calendar/CalendarEvent";
 import { EventColors } from "@/types/Calendar/EventColor";
 import { EventDateRange } from "@/types/Calendar/EventDateRange";
+import type { Person } from "@/types/Calendar/Person";
 
 // 매 주 특정 요일 일정
 export const expandWeeklyDays = (
   title: string,
+  person: Person,
   weekdays: number[],
   range: EventDateRange,
   colors: EventColors,
@@ -27,6 +29,7 @@ export const expandWeeklyDays = (
     if (times) {
       events.push({
         title,
+        person,
         start: day
           .hour(times.startHour)
           .minute(times.startMinute)
@@ -40,6 +43,7 @@ export const expandWeeklyDays = (
 
     events.push({
       title,
+      person,
       start: day.toDate(),
       end: day.add(1, "day").toDate(),
       allDay: true,

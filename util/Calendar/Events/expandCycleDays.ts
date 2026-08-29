@@ -34,6 +34,7 @@ export const expandCycleDays = (
       ) {
         events.push({
           title: slot.title,
+          person: slot.person,
           start: slotStart.toDate(),
           end: slotEnd.toDate(),
           allDay: true,
