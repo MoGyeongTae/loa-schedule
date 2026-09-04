@@ -136,8 +136,8 @@ const ScheduleCalendar = () => {
   const router = useRouter();
   const [currentDate, setCurrentDate] = useState(() => dayjs().toDate());
   const [range, setRange] = useState<DateRange>({
-    start: dayjs("2026-08-01").startOf("day"),
-    end: dayjs("2026-08-31").endOf("day"),
+    start: dayjs(),
+    end: dayjs().add(7, "day"),
   });
 
   const events = useMemo(
@@ -199,6 +199,10 @@ const ScheduleCalendar = () => {
     [events],
   );
 
+  const onHandleRangeChange = (nextRange: Date[] | { start: Date; end: Date }) => {
+    setRange(getRangeBounds(nextRange));
+  };
+
   return (
     <div className="mx-auto w-full min-w-0 max-w-6xl px-4 py-8">
       <div className="min-w-0 overflow-hidden rounded-xl border border-zinc-200 bg-white p-4 shadow-sm">
@@ -209,7 +213,7 @@ const ScheduleCalendar = () => {
           endAccessor="end"
           date={currentDate}
           onNavigate={setCurrentDate}
-          onRangeChange={(nextRange) => setRange(getRangeBounds(nextRange))}
+          onRangeChange={onHandleRangeChange}
           selectable
           onSelectSlot={({ start }) => {
             router.push(toSchedulePath(start));
