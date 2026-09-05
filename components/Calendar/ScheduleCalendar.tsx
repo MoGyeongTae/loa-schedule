@@ -22,6 +22,7 @@ type DateRange = {
   start: Dayjs;
   end: Dayjs;
 };
+// test
 
 type EventColors = {
   bgColor: string;
@@ -199,7 +200,9 @@ const ScheduleCalendar = () => {
     [events],
   );
 
-  const onHandleRangeChange = (nextRange: Date[] | { start: Date; end: Date }) => {
+  const onHandleRangeChange = (
+    nextRange: Date[] | { start: Date; end: Date },
+  ) => {
     setRange(getRangeBounds(nextRange));
   };
 
