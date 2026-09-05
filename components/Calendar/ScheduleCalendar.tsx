@@ -16,8 +16,6 @@ dayjs.locale("ko");
 
 const localizer = dayjsLocalizer(dayjs);
 
-type TestEvent = CalendarEvent;
-
 type DateRange = {
   start: Dayjs;
   end: Dayjs;
@@ -55,8 +53,8 @@ function expandMonthlyNthWeekday(
   nth: number,
   range: DateRange,
   colors: EventColors,
-): TestEvent[] {
-  const events: TestEvent[] = [];
+): CalendarEvent[] {
+  const events: CalendarEvent[] = [];
   let cursor = range.start.startOf("month");
   const lastMonth = range.end.endOf("month");
 
@@ -83,35 +81,6 @@ function expandMonthlyNthWeekday(
 
   return events;
 }
-
-const ONE_OFF_EVENTS: TestEvent[] = [
-  {
-    title: "연차",
-    person: "경태",
-    start: dayjs("2026-08-25").toDate(),
-    end: dayjs("2026-08-26").toDate(),
-    allDay: true,
-    bgColor: "#2563eb",
-    textColor: "#ffffff",
-  },
-  {
-    title: "주말 근무",
-    person: "용중",
-    start: dayjs("2026-08-22").toDate(),
-    end: dayjs("2026-08-23").toDate(),
-    allDay: true,
-    bgColor: "#dc2626",
-    textColor: "#ffffff",
-  },
-  {
-    title: "야간 점검",
-    person: "용중",
-    start: dayjs("2026-08-27").hour(20).minute(0).toDate(),
-    end: dayjs("2026-08-27").hour(22).minute(0).toDate(),
-    bgColor: "#059669",
-    textColor: "#ffffff",
-  },
-];
 
 const messages = {
   next: "다음",
@@ -230,7 +199,7 @@ const ScheduleCalendar = () => {
           culture="ko"
           messages={messages}
           style={{ height: 720 }}
-          eventPropGetter={(event: TestEvent) => ({
+          eventPropGetter={(event: CalendarEvent) => ({
             style: {
               backgroundColor: event.bgColor,
               color: event.textColor,
