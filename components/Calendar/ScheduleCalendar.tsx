@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import dayjs, { type Dayjs } from "dayjs";
@@ -101,6 +101,23 @@ function toSchedulePath(date: Date) {
   return `/${dayjs(date).format("YYYY-MM-DD")}/schedule`;
 }
 
+async function fetchScheduleEvents(range: DateRange) {
+  const params = new URLSearchParams({
+    event_date_start: range.start.format("YYYY-MM-DD"),
+    event_date_end: range.end.format("YYYY-MM-DD"),
+  });
+
+  const response = await fetch(
+    `http://localhost:3001/schedule-events?${params.toString()}`,
+  );
+
+  if (!response.ok) {
+    throw new Error(`일정 조회 실패: ${response.status}`);
+  }
+
+  return response.json();
+}
+
 const ScheduleCalendar = () => {
   const router = useRouter();
   const [currentDate, setCurrentDate] = useState(() => dayjs().toDate());
@@ -167,6 +184,16 @@ const ScheduleCalendar = () => {
     () => findOverlapDays(events, "경태 - 알바", "용중 - 야간"),
     [events],
   );
+
+  useEffect(() => {
+    fetchScheduleEvents(range)
+      .then((data) => {
+        console.log("schedule-events", data);
+      })
+      .catch((error) => {
+        console.error("schedule-events", error);
+      });
+  }, [range]);
 
   const onHandleRangeChange = (
     nextRange: Date[] | { start: Date; end: Date },
