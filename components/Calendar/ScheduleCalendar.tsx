@@ -22,7 +22,6 @@ type DateRange = {
   start: Dayjs;
   end: Dayjs;
 };
-// test
 
 type EventColors = {
   bgColor: string;
