@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { SubmitEvent, useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import { PEOPLE, type Person } from "@/types/Calendar/Person";
@@ -53,10 +53,25 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
     );
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback(async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // TODO: 일정 추가 로직 구현
+    // console.log(person, title, startDate, allDay, startTime, endTime, repeat, weekdays, color);
+    try {
+      const response = await fetch("http://localhost:3001/schedule-events", {
+        method: "POST",
+        body: JSON.stringify({ user_name: person, name: title, event_date: startDate, start_time: startTime, end_time: endTime, weekdays }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to add schedule");
+      }
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
     router.push(`/${initialDate}/schedule`);
-  };
+  }, [initialDate, router]);
 
   return (
     <form
@@ -78,11 +93,10 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
                   type="button"
                   aria-pressed={selected}
                   onClick={() => setPerson(name)}
-                  className={`h-9 rounded-full px-3.5 text-sm font-medium cursor-pointer ${
-                    selected
-                      ? "bg-zinc-900 text-white"
-                      : "bg-zinc-100 text-zinc-500"
-                  }`}
+                  className={`h-9 rounded-full px-3.5 text-sm font-medium cursor-pointer ${selected
+                    ? "bg-zinc-900 text-white"
+                    : "bg-zinc-100 text-zinc-500"
+                    }`}
                 >
                   {name}
                 </button>
@@ -190,11 +204,10 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
                     type="button"
                     aria-pressed={selected}
                     onClick={() => toggleWeekday(weekday.value)}
-                    className={`h-9 w-9 rounded-full text-sm font-medium cursor-pointer ${
-                      selected
-                        ? "bg-zinc-900 text-white"
-                        : "bg-zinc-100 text-zinc-500"
-                    }`}
+                    className={`h-9 w-9 rounded-full text-sm font-medium cursor-pointer ${selected
+                      ? "bg-zinc-900 text-white"
+                      : "bg-zinc-100 text-zinc-500"
+                      }`}
                   >
                     {weekday.label}
                   </button>
@@ -215,9 +228,8 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
                 type="button"
                 aria-label={item.label}
                 onClick={() => setColor(item.bg)}
-                className={`h-8 w-8 rounded-full border-2 ${
-                  color === item.bg ? "border-zinc-900" : "border-transparent"
-                }`}
+                className={`h-8 w-8 rounded-full border-2 ${color === item.bg ? "border-zinc-900" : "border-transparent"
+                  }`}
                 style={{ backgroundColor: item.bg }}
               />
             ))}
