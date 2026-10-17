@@ -59,6 +59,7 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
       // TODO: 일정 추가 로직 구현
       // console.log(person, title, startDate, allDay, startTime, endTime, repeat, weekdays, color);
       try {
+        // console.log(weekdays, color);
         const response = await fetch("http://localhost:3001/schedule-events", {
           headers: {
             "Content-Type": "application/json",
@@ -70,7 +71,10 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
             event_date: startDate,
             start_time: startTime,
             end_time: endTime,
-            weekdays,
+            week_days: weekdays,
+            event_options: {
+              color: color,
+            },
           }),
         });
         if (!response.ok) {
