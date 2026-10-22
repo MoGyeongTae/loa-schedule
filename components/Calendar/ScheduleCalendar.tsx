@@ -11,6 +11,7 @@ import { expandCycleDays } from "@/util/Calendar/Events/expandCycleDays";
 import { findOverlapDays } from "@/util/Calendar/Events/findOverlapDays";
 import type { CalendarEvent } from "@/types/Calendar/CalendarEvent";
 import type { Person } from "@/types/Calendar/Person";
+import { CalendarEventData } from "@/types/Calendar/CalendarEventData";
 
 dayjs.locale("ko");
 
@@ -187,7 +188,7 @@ const ScheduleCalendar = () => {
 
   useEffect(() => {
     fetchScheduleEvents(range)
-      .then((data) => {
+      .then((data: CalendarEventData[]) => {
         console.log("schedule-events", data);
       })
       .catch((error) => {
