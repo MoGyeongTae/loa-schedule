@@ -9,14 +9,13 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { expandWeeklyDays } from "@/util/Calendar/Events/expandWeeklyDays";
 import { expandCycleDays } from "@/util/Calendar/Events/expandCycleDays";
 import { findOverlapDays } from "@/util/Calendar/Events/findOverlapDays";
+import { useScheduleEvents } from "@/hooks/Calendar/useScheduleEvents";
 import type { CalendarEvent } from "@/types/Calendar/CalendarEvent";
 import type { Person } from "@/types/Calendar/Person";
 
 dayjs.locale("ko");
 
 const localizer = dayjsLocalizer(dayjs);
-
-type TestEvent = CalendarEvent;
 
 type DateRange = {
   start: Dayjs;
@@ -55,8 +54,8 @@ function expandMonthlyNthWeekday(
   nth: number,
   range: DateRange,
   colors: EventColors,
-): TestEvent[] {
-  const events: TestEvent[] = [];
+): CalendarEvent[] {
+  const events: CalendarEvent[] = [];
   let cursor = range.start.startOf("month");
   const lastMonth = range.end.endOf("month");
 
@@ -84,35 +83,6 @@ function expandMonthlyNthWeekday(
   return events;
 }
 
-const ONE_OFF_EVENTS: TestEvent[] = [
-  {
-    title: "연차",
-    person: "경태",
-    start: dayjs("2026-08-25").toDate(),
-    end: dayjs("2026-08-26").toDate(),
-    allDay: true,
-    bgColor: "#2563eb",
-    textColor: "#ffffff",
-  },
-  {
-    title: "주말 근무",
-    person: "용중",
-    start: dayjs("2026-08-22").toDate(),
-    end: dayjs("2026-08-23").toDate(),
-    allDay: true,
-    bgColor: "#dc2626",
-    textColor: "#ffffff",
-  },
-  {
-    title: "야간 점검",
-    person: "용중",
-    start: dayjs("2026-08-27").hour(20).minute(0).toDate(),
-    end: dayjs("2026-08-27").hour(22).minute(0).toDate(),
-    bgColor: "#059669",
-    textColor: "#ffffff",
-  },
-];
-
 const messages = {
   next: "다음",
   previous: "이전",
@@ -136,9 +106,10 @@ const ScheduleCalendar = () => {
   const router = useRouter();
   const [currentDate, setCurrentDate] = useState(() => dayjs().toDate());
   const [range, setRange] = useState<DateRange>({
-    start: dayjs("2026-08-01").startOf("day"),
-    end: dayjs("2026-08-31").endOf("day"),
+    start: dayjs(),
+    end: dayjs().add(7, "day"),
   });
+  const scheduleEvents = useScheduleEvents(range);
 
   const events = useMemo(
     () => [
@@ -190,14 +161,21 @@ const ScheduleCalendar = () => {
         range,
       ),
       // ...ONE_OFF_EVENTS,
+      ...scheduleEvents,
     ],
-    [range],
+    [range, scheduleEvents],
   );
 
   const overlapDays = useMemo(
     () => findOverlapDays(events, "경태 - 알바", "용중 - 야간"),
     [events],
   );
+
+  const onHandleRangeChange = (
+    nextRange: Date[] | { start: Date; end: Date },
+  ) => {
+    setRange(getRangeBounds(nextRange));
+  };
 
   return (
     <div className="mx-auto w-full min-w-0 max-w-6xl px-4 py-8">
@@ -209,7 +187,7 @@ const ScheduleCalendar = () => {
           endAccessor="end"
           date={currentDate}
           onNavigate={setCurrentDate}
-          onRangeChange={(nextRange) => setRange(getRangeBounds(nextRange))}
+          onRangeChange={onHandleRangeChange}
           selectable
           onSelectSlot={({ start }) => {
             router.push(toSchedulePath(start));
@@ -224,7 +202,7 @@ const ScheduleCalendar = () => {
           culture="ko"
           messages={messages}
           style={{ height: 720 }}
-          eventPropGetter={(event: TestEvent) => ({
+          eventPropGetter={(event: CalendarEvent) => ({
             style: {
               backgroundColor: event.bgColor,
               color: event.textColor,

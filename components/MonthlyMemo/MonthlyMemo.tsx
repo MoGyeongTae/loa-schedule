@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const NOTES = [
   {
     id: "weekend-shift",
@@ -42,9 +44,15 @@ const MonthlyMemo = () => {
             <p className="text-xs font-medium tracking-wide text-amber-800/70">
               2026년 8월
             </p>
-            <h2 className="text-lg font-semibold text-zinc-800">월별 메모</h2>
           </div>
-          <p className="text-xs text-amber-900/60">이번 달 특이사항</p>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/memo/add"
+              className="rounded-lg px-3 py-1.5 text-xs font-medium text-amber-900/60"
+            >
+              메모 추가
+            </Link>
+          </div>
         </div>
 
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

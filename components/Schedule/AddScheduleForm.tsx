@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { SubmitEvent, useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import { PEOPLE, type Person } from "@/types/Calendar/Person";
@@ -53,10 +53,54 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
     );
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    router.push(`/${initialDate}/schedule`);
-  };
+  const handleSubmit = useCallback(
+    async (event: SubmitEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      // TODO: 일정 추가 로직 구현
+      // console.log(person, title, startDate, allDay, startTime, endTime, repeat, weekdays, color);
+      try {
+        // console.log(weekdays, color);
+        const response = await fetch("http://localhost:3001/schedule-events", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            user_name: person,
+            name: title,
+            event_date: startDate,
+            start_time: startTime,
+            end_time: endTime,
+            week_days: weekdays,
+            event_options: {
+              color: color,
+            },
+          }),
+        });
+        if (!response.ok) {
+          throw new Error("Failed to add schedule");
+        }
+        const data = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
+      router.push(`/${initialDate}/schedule`);
+    },
+    [
+      initialDate,
+      router,
+      title,
+      person,
+      startDate,
+      allDay,
+      startTime,
+      endTime,
+      repeat,
+      weekdays,
+      color,
+    ],
+  );
 
   return (
     <form

@@ -7,6 +7,7 @@ import "dayjs/locale/ko";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { expandWeeklyDays } from "@/util/Calendar/Events/expandWeeklyDays";
 import { expandCycleDays } from "@/util/Calendar/Events/expandCycleDays";
+import { useScheduleEvents } from "@/hooks/Calendar/useScheduleEvents";
 import type { CalendarEvent } from "@/types/Calendar/CalendarEvent";
 
 dayjs.locale("ko");
@@ -40,6 +41,7 @@ const DayCalendar = ({ date }: DayCalendarProps) => {
     }),
     [initialDate],
   );
+  const scheduleEvents = useScheduleEvents(range);
 
   const events = useMemo(
     () => [
@@ -91,8 +93,9 @@ const DayCalendar = ({ date }: DayCalendarProps) => {
         range,
       ),
       // ...ONE_OFF_EVENTS,
+      ...scheduleEvents,
     ],
-    [range],
+    [range, scheduleEvents],
   );
 
   return (

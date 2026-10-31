@@ -1,4 +1,4 @@
-import TestCalendar from "@/components/Calendar/ScheduleCalendar";
+import ScheduleCalendar from "@/components/Calendar/ScheduleCalendar";
 import MonthlyMemo from "@/components/MonthlyMemo/MonthlyMemo";
 
 export default function Home() {
@@ -7,9 +7,7 @@ export default function Home() {
       {/* 월별 메모 */}
       <MonthlyMemo />
       {/* 캘린더 */}
-      {/* <Calendar /> */}
-      {/* <Test /> */}
-      <TestCalendar />
+      <ScheduleCalendar />
     </div>
   );
 }
