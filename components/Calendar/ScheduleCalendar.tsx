@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import dayjs, { type Dayjs } from "dayjs";
@@ -9,9 +9,9 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { expandWeeklyDays } from "@/util/Calendar/Events/expandWeeklyDays";
 import { expandCycleDays } from "@/util/Calendar/Events/expandCycleDays";
 import { findOverlapDays } from "@/util/Calendar/Events/findOverlapDays";
+import { useScheduleEvents } from "@/hooks/Calendar/useScheduleEvents";
 import type { CalendarEvent } from "@/types/Calendar/CalendarEvent";
 import type { Person } from "@/types/Calendar/Person";
-import { CalendarEventData } from "@/types/Calendar/CalendarEventData";
 
 dayjs.locale("ko");
 
@@ -102,23 +102,6 @@ function toSchedulePath(date: Date) {
   return `/${dayjs(date).format("YYYY-MM-DD")}/schedule`;
 }
 
-async function fetchScheduleEvents(range: DateRange) {
-  const params = new URLSearchParams({
-    event_date_start: range.start.format("YYYY-MM-DD"),
-    event_date_end: range.end.format("YYYY-MM-DD"),
-  });
-
-  const response = await fetch(
-    `http://localhost:3001/schedule-events?${params.toString()}`,
-  );
-
-  if (!response.ok) {
-    throw new Error(`일정 조회 실패: ${response.status}`);
-  }
-
-  return response.json();
-}
-
 const ScheduleCalendar = () => {
   const router = useRouter();
   const [currentDate, setCurrentDate] = useState(() => dayjs().toDate());
@@ -126,6 +109,7 @@ const ScheduleCalendar = () => {
     start: dayjs(),
     end: dayjs().add(7, "day"),
   });
+  const scheduleEvents = useScheduleEvents(range);
 
   const events = useMemo(
     () => [
@@ -177,24 +161,15 @@ const ScheduleCalendar = () => {
         range,
       ),
       // ...ONE_OFF_EVENTS,
+      ...scheduleEvents,
     ],
-    [range],
+    [range, scheduleEvents],
   );
 
   const overlapDays = useMemo(
     () => findOverlapDays(events, "경태 - 알바", "용중 - 야간"),
     [events],
   );
-
-  useEffect(() => {
-    fetchScheduleEvents(range)
-      .then((data: CalendarEventData[]) => {
-        console.log("schedule-events", data);
-      })
-      .catch((error) => {
-        console.error("schedule-events", error);
-      });
-  }, [range]);
 
   const onHandleRangeChange = (
     nextRange: Date[] | { start: Date; end: Date },
