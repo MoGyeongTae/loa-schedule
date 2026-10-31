@@ -199,6 +199,7 @@ const ScheduleCalendar = () => {
             router.push(toSchedulePath(date));
           }}
           defaultView="week"
+          views={["week"]}
           culture="ko"
           messages={messages}
           style={{ height: 720 }}
