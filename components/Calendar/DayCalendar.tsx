@@ -8,6 +8,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { expandWeeklyDays } from "@/util/Calendar/Events/expandWeeklyDays";
 import { expandCycleDays } from "@/util/Calendar/Events/expandCycleDays";
 import { useScheduleEvents } from "@/hooks/Calendar/useScheduleEvents";
+import { CALENDAR_MIN_TIME } from "@/util/Calendar/calendarTime";
 import type { CalendarEvent } from "@/types/Calendar/CalendarEvent";
 
 dayjs.locale("ko");
@@ -110,6 +111,7 @@ const DayCalendar = ({ date }: DayCalendarProps) => {
         defaultView="day"
         views={["day"]}
         toolbar={false}
+        min={CALENDAR_MIN_TIME}
         culture="ko"
         style={{ height: 720 }}
         eventPropGetter={(event: CalendarEvent) => ({
