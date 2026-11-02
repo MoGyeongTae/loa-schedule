@@ -73,7 +73,7 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
             end_time: endTime,
             week_days: weekdays,
             event_options: {
-              color: color,
+              bgColor: color,
             },
           }),
         });

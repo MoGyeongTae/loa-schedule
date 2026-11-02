@@ -10,6 +10,7 @@ import { expandWeeklyDays } from "@/util/Calendar/Events/expandWeeklyDays";
 import { expandCycleDays } from "@/util/Calendar/Events/expandCycleDays";
 import { findOverlapDays } from "@/util/Calendar/Events/findOverlapDays";
 import { useScheduleEvents } from "@/hooks/Calendar/useScheduleEvents";
+import { CALENDAR_MIN_TIME } from "@/util/Calendar/calendarTime";
 import type { CalendarEvent } from "@/types/Calendar/CalendarEvent";
 import type { Person } from "@/types/Calendar/Person";
 
@@ -200,6 +201,7 @@ const ScheduleCalendar = () => {
           }}
           defaultView="week"
           views={["week"]}
+          min={CALENDAR_MIN_TIME}
           culture="ko"
           messages={messages}
           style={{ height: 720 }}
