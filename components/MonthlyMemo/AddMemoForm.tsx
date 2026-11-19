@@ -2,14 +2,6 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import dayjs from "dayjs";
-
-const COLORS = [
-  { id: "yellow", bg: "#fef08a", label: "노랑" },
-  { id: "pink", bg: "#fda4af", label: "분홍" },
-  { id: "green", bg: "#86efac", label: "초록" },
-  { id: "blue", bg: "#93c5fd", label: "파랑" },
-];
 
 const AddMemoForm = () => {
   const router = useRouter();
