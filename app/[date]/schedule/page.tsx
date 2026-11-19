@@ -11,18 +11,18 @@ export default async function DaySchedulePage({
 
   return (
     <div className="mx-auto w-full min-w-0 max-w-6xl px-4 py-8">
-      <Link href="/" className="text-sm text-zinc-500 hover:text-zinc-800">
+      <Link href="/" className="text-sm text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">
         ← 캘린더로
       </Link>
       <div className="flex items-center mt-4">
-        <h1 className="text-2xl font-semibold text-zinc-900">{label} 일정</h1>
+        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">{label} 일정</h1>
         <Link
           href={`/${date}/add`}
-          className="ml-auto text-sm text-zinc-500 hover:text-zinc-800"
+          className="ml-auto text-sm text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
         >
           일정 추가
         </Link>
-        <div className="ml-4 text-sm text-zinc-500 hover:text-zinc-800 cursor-pointer">
+        <div className="ml-4 cursor-pointer text-sm text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">
           일정 편집
         </div>
       </div>
