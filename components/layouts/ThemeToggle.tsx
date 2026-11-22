@@ -27,7 +27,7 @@ const ThemeToggle = () => {
       type="button"
       onClick={toggleTheme}
       aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
-      className="ml-auto flex h-9 w-9 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-[#23242b] dark:text-zinc-300 dark:hover:bg-[#2f3038]"
+      className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-[#23242b] dark:text-zinc-300 dark:hover:bg-[#2f3038]"
     >
       {isDark ? (
         <svg

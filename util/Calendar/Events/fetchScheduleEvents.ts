@@ -1,5 +1,6 @@
 import { CalendarEventData } from "@/types/Calendar/CalendarEventData";
 import { EventDateRange } from "@/types/Calendar/EventDateRange";
+import { apiFetch } from "@/util/Auth/api";
 
 // 기간 내 일정 이벤트 조회
 export const fetchScheduleEvents = async (
@@ -10,8 +11,8 @@ export const fetchScheduleEvents = async (
     event_date_end: range.end.format("YYYY-MM-DD"),
   });
 
-  const response = await fetch(
-    `http://localhost:3001/schedule-events?${params.toString()}`,
+  const response = await apiFetch(
+    `/schedule-events?${params.toString()}`,
   );
 
   if (!response.ok) {
