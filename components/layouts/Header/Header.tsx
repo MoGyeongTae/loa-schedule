@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AuthNav from "@/components/layouts/AuthNav";
 import ThemeToggle from "@/components/layouts/ThemeToggle";
 
 const Header = () => {
@@ -8,7 +9,10 @@ const Header = () => {
         <h1 className="text-zinc-900 dark:text-zinc-100">
           <Link href="/">Loa Schedule</Link>
         </h1>
-        <ThemeToggle />
+        <div className="ml-auto flex items-center gap-3">
+          <AuthNav />
+          <ThemeToggle />
+        </div>
       </div>
     </div>
   );

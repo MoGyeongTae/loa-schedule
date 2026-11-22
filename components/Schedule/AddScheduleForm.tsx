@@ -4,6 +4,7 @@ import { SubmitEvent, useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import { PEOPLE, type Person } from "@/types/Calendar/Person";
+import { apiFetch } from "@/util/Auth/api";
 
 type AddScheduleFormProps = {
   date: string;
@@ -60,10 +61,7 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
       // console.log(person, title, startDate, allDay, startTime, endTime, repeat, weekdays, color);
       try {
         // console.log(weekdays, color);
-        const response = await fetch("http://localhost:3001/schedule-events", {
-          headers: {
-            "Content-Type": "application/json",
-          },
+        const response = await apiFetch("/schedule-events", {
           method: "POST",
           body: JSON.stringify({
             user_name: person,
