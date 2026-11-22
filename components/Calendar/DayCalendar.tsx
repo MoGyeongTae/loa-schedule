@@ -5,6 +5,8 @@ import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import dayjs, { type Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import "./calendar.css";
+import CalendarEventChip from "@/components/Calendar/CalendarEventChip";
 import { expandWeeklyDays } from "@/util/Calendar/Events/expandWeeklyDays";
 import { expandCycleDays } from "@/util/Calendar/Events/expandCycleDays";
 import { useScheduleEvents } from "@/hooks/Calendar/useScheduleEvents";
@@ -100,7 +102,7 @@ const DayCalendar = ({ date }: DayCalendarProps) => {
   );
 
   return (
-    <div className="min-w-0 overflow-hidden rounded-xl border border-zinc-200 bg-white p-4 shadow-sm">
+    <div className="loa-calendar min-w-0 rounded-2xl border border-zinc-200/80 bg-white p-5 shadow-[0_10px_30px_rgba(24,24,27,0.06)] dark:border-[#2a2b33] dark:bg-[#17181d] dark:shadow-none">
       <Calendar
         localizer={localizer}
         events={events}
@@ -113,6 +115,12 @@ const DayCalendar = ({ date }: DayCalendarProps) => {
         toolbar={false}
         min={CALENDAR_MIN_TIME}
         culture="ko"
+        components={{ event: CalendarEventChip }}
+        formats={{
+          timeGutterFormat: "HH:mm",
+          dayFormat: "ddd D",
+          eventTimeRangeFormat: () => "",
+        }}
         style={{ height: 720 }}
         eventPropGetter={(event: CalendarEvent) => ({
           style: {
@@ -121,7 +129,6 @@ const DayCalendar = ({ date }: DayCalendarProps) => {
             border: "none",
           },
         })}
-        // onSelectEvent={() => {}}
       />
     </div>
   );

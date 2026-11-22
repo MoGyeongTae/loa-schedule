@@ -13,11 +13,11 @@ export default async function AddSchedulePage({
     <div className="mx-auto w-full min-w-0 max-w-6xl px-4 py-8">
       <Link
         href={`/${date}/schedule`}
-        className="text-sm text-zinc-500 hover:text-zinc-800"
+        className="text-sm text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
       >
         ← 일정으로
       </Link>
-      <h1 className="mt-4 text-2xl font-semibold text-zinc-900">
+      <h1 className="mt-4 text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
         {label} 일정 추가
       </h1>
       <div className="mt-6 max-w-xl">
