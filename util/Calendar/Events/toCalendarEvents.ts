@@ -3,7 +3,6 @@ import { CalendarEvent } from "@/types/Calendar/CalendarEvent";
 import { CalendarEventData } from "@/types/Calendar/CalendarEventData";
 import { EventColors } from "@/types/Calendar/EventColor";
 import { EventDateRange } from "@/types/Calendar/EventDateRange";
-import type { Person } from "@/types/Calendar/Person";
 import { expandWeeklyDays } from "./expandWeeklyDays";
 
 const DEFAULT_COLORS: EventColors = {
@@ -27,7 +26,7 @@ export const toCalendarEvents = (
   range: EventDateRange,
 ): CalendarEvent[] =>
   data.flatMap((item) => {
-    const person = item.user_name as Person;
+    const person = item.user_name;
     const colors: EventColors = {
       bgColor: item.event_options?.bgColor ?? DEFAULT_COLORS.bgColor,
       textColor: item.event_options?.textColor ?? DEFAULT_COLORS.textColor,

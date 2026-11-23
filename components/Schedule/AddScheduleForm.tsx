@@ -3,7 +3,6 @@
 import { SubmitEvent, useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
-import { PEOPLE, type Person } from "@/types/Calendar/Person";
 import { apiFetch } from "@/util/Auth/api";
 
 type AddScheduleFormProps = {
@@ -34,7 +33,6 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
     ? dayjs(date).format("YYYY-MM-DD")
     : dayjs().format("YYYY-MM-DD");
 
-  const [person, setPerson] = useState<Person>(PEOPLE[0]);
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState(initialDate);
   const [allDay, setAllDay] = useState(true);
@@ -57,14 +55,10 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
   const handleSubmit = useCallback(
     async (event: SubmitEvent<HTMLFormElement>) => {
       event.preventDefault();
-      // TODO: 일정 추가 로직 구현
-      // console.log(person, title, startDate, allDay, startTime, endTime, repeat, weekdays, color);
       try {
-        // console.log(weekdays, color);
         const response = await apiFetch("/schedule-events", {
           method: "POST",
           body: JSON.stringify({
-            user_name: person,
             name: title,
             event_date: startDate,
             start_time: startTime,
@@ -89,7 +83,6 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
       initialDate,
       router,
       title,
-      person,
       startDate,
       allDay,
       startTime,
@@ -106,33 +99,6 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
       className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#2a2b33] dark:bg-[#17181d]"
     >
       <div className="grid gap-5">
-        <fieldset>
-          <legend className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            일정 주체
-          </legend>
-          <div className="flex flex-wrap gap-2">
-            {PEOPLE.map((name) => {
-              const selected = person === name;
-
-              return (
-                <button
-                  key={name}
-                  type="button"
-                  aria-pressed={selected}
-                  onClick={() => setPerson(name)}
-                  className={`h-9 rounded-full px-3.5 text-sm font-medium cursor-pointer ${
-                    selected
-                      ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                      : "bg-zinc-100 text-zinc-500 dark:bg-[#23242b] dark:text-zinc-400"
-                  }`}
-                >
-                  {name}
-                </button>
-              );
-            })}
-          </div>
-        </fieldset>
-
         <label className="block">
           <span className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
             일정 이름
