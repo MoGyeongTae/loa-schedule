@@ -21,7 +21,7 @@ const LoginForm = () => {
     setSubmitting(true);
 
     try {
-      const response = await apiFetch("/login", {
+      const response = await apiFetch("/api/auth/login", {
         method: "POST",
         body: JSON.stringify({
           user_id: userId,

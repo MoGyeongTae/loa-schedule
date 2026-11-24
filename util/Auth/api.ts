@@ -3,7 +3,7 @@ import { clearAccessToken, getAccessToken } from "@/util/Auth/token";
 export const API_BASE_URL = "http://localhost:3001";
 
 function isLoginPath(path: string): boolean {
-  return path.split("?")[0] === "/login";
+  return path.split("?")[0] === "/api/auth/login";
 }
 
 function redirectToLogin(): void {

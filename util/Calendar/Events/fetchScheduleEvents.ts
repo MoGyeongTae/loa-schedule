@@ -12,7 +12,7 @@ export const fetchScheduleEvents = async (
   });
 
   const response = await apiFetch(
-    `/schedule-events?${params.toString()}`,
+    `/api/schedule/events?${params.toString()}`,
   );
 
   if (!response.ok) {

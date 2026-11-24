@@ -56,7 +56,7 @@ const AddScheduleForm = ({ date }: AddScheduleFormProps) => {
     async (event: SubmitEvent<HTMLFormElement>) => {
       event.preventDefault();
       try {
-        const response = await apiFetch("/schedule-events", {
+        const response = await apiFetch("/api/schedule/events", {
           method: "POST",
           body: JSON.stringify({
             name: title,
