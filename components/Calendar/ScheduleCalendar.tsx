@@ -112,7 +112,7 @@ const ScheduleCalendar = () => {
     start: dayjs(),
     end: dayjs().add(7, "day"),
   });
-  const scheduleEvents = useScheduleEvents(range);
+  const { events: scheduleEvents } = useScheduleEvents(range);
 
   const events = useMemo(
     () => [

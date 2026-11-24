@@ -16,6 +16,10 @@ export const expandWeeklyDays = (
     endHour: number;
     endMinute: number;
   },
+  meta?: {
+    id?: number;
+    uid?: number;
+  },
 ): CalendarEvent[] => {
   const events: CalendarEvent[] = [];
 
@@ -30,6 +34,8 @@ export const expandWeeklyDays = (
       events.push({
         title,
         person,
+        id: meta?.id,
+        uid: meta?.uid,
         start: day
           .hour(times.startHour)
           .minute(times.startMinute)
@@ -44,6 +50,8 @@ export const expandWeeklyDays = (
     events.push({
       title,
       person,
+      id: meta?.id,
+      uid: meta?.uid,
       start: day.toDate(),
       end: day.add(1, "day").toDate(),
       allDay: true,

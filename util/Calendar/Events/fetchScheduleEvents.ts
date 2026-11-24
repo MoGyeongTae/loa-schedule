@@ -21,3 +21,13 @@ export const fetchScheduleEvents = async (
 
   return response.json();
 };
+
+export const deleteScheduleEvent = async (id: number): Promise<void> => {
+  const response = await apiFetch(`/api/schedule/events/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error(`일정 삭제 실패: ${response.status}`);
+  }
+};

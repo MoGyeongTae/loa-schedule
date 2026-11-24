@@ -7,6 +7,7 @@ import "dayjs/locale/ko";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./calendar.css";
 import CalendarEventChip from "@/components/Calendar/CalendarEventChip";
+import DayScheduleList from "@/components/Schedule/DayScheduleList";
 import { expandWeeklyDays } from "@/util/Calendar/Events/expandWeeklyDays";
 import { expandCycleDays } from "@/util/Calendar/Events/expandCycleDays";
 import { useScheduleEvents } from "@/hooks/Calendar/useScheduleEvents";
@@ -44,7 +45,7 @@ const DayCalendar = ({ date }: DayCalendarProps) => {
     }),
     [initialDate],
   );
-  const scheduleEvents = useScheduleEvents(range);
+  const { events: scheduleEvents, items, reload } = useScheduleEvents(range);
 
   const events = useMemo(
     () => [
@@ -130,6 +131,7 @@ const DayCalendar = ({ date }: DayCalendarProps) => {
           },
         })}
       />
+      <DayScheduleList date={date} items={items} onDeleted={reload} />
     </div>
   );
 };

@@ -56,6 +56,7 @@ export const toCalendarEvents = (
         },
         colors,
         times,
+        { id: item.id, uid: item.uid },
       );
     }
 
@@ -65,6 +66,8 @@ export const toCalendarEvents = (
         {
           title: item.name,
           person,
+          id: item.id,
+          uid: item.uid,
           start: eventDate
             .hour(times.startHour)
             .minute(times.startMinute)
@@ -79,6 +82,8 @@ export const toCalendarEvents = (
       {
         title: item.name,
         person,
+        id: item.id,
+        uid: item.uid,
         start: eventDate.toDate(),
         end: eventDate.add(1, "day").toDate(),
         allDay: true,

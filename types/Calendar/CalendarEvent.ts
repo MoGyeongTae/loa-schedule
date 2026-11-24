@@ -5,4 +5,5 @@ export type CalendarEvent = RBCEvent & {
   bgColor: string;
   textColor: string;
   person: Person;
+  uid?: number;
 };

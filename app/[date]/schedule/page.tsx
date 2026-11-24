@@ -22,9 +22,6 @@ export default async function DaySchedulePage({
         >
           일정 추가
         </Link>
-        <div className="ml-4 cursor-pointer text-sm text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">
-          일정 편집
-        </div>
       </div>
       <div className="mt-6">
         <DayCalendar date={date} />

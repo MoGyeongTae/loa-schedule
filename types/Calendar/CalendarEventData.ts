@@ -14,6 +14,7 @@ export interface CalendarEventData {
   id: number;
   name: string;
   start_time: string;
+  uid: number;
   user_name: string;
   week_days: null | number[];
 }
